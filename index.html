@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<!-- 告诉浏览器：这是一个HTML5的文档 -->
+<html>
+<head>
+    <!-- 脑袋部分：放一些看不见的设置 -->
+    <title>未来商城</title>
+    <!-- 网页在浏览器标签页上显示的名字 -->
+    
+    <style>
+        /* ========== 这里全是CSS样式，就是给网页化妆 ========== */
+        
+        /* 给整个身体（网页）化妆 */
+        body { 
+            margin: 0; /* 去掉网页默认的白边边 */
+            background: #0a0e17; /* 背景涂成深蓝色 */
+            color: #00f3ff; /* 默认文字涂成青色 */
+            font-family: 'Segoe UI', sans-serif; /* 用这个字体写文字 */
+            /* 背景搞成渐变：从深蓝慢慢变成深紫色 */
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f35 100%);
+            min-height: 100vh; /* 最小高度：撑满整个屏幕 */
+        }
+        
+        /* 顶上的条条（像手机的状态栏） */
+        .header { 
+            background: rgba(10, 14, 23, 0.9);  /* 半透明的深蓝背景 */
+            padding: 15px 30px; /* 里面内容距离边边：上下15像素，左右30像素 */
+            display: flex; /* 用弹性布局 */
+            justify-content: space-between;  /* 里面的东西左右分开站 */
+            align-items: center;  /* 里面的东西上下居中站 */
+            border-bottom: 2px solid #00f3ff;  /* 底下加一条青色边边 */
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);  /* 加一圈青色发光 */
+        }
+        
+        /* 左上角的网站名字 */
+        .logo { 
+            font-size: 28px; /* 字的大小：28像素 */
+            font-weight: bold; /* 字加粗 */
+            color: #00f3ff; /* 字涂成青色 */
+            text-shadow: 0 0 10px #00f3ff;  /* 字也发光 */
+        }
+        
+        /* 搜索框那个区域 */
+        .search { 
+            width: 350px; /* 宽度固定350像素 */
+            display: flex; /* 也用弹性布局 */
+            position: relative; /* 定位方式：相对的（为了里面的东西定位） */
+        }
+        /* 搜索框里面的输入框 */
+        .search input { 
+            flex: 1;  /* 把剩下的空间都占了 */
+            padding: 10px 15px; /* 输入框里面的字距离边边 */
+            background: rgba(0, 0, 0, 0.5);  /* 半透明黑背景 */
+            border: 1px solid #00f3ff; /* 青色边框 */
+            color: #00f3ff; /* 输入的文字是青色 */
+            border-radius: 0; /* 不要圆角，要直角 */
+            font-size: 14px; /* 字的大小 */
+        }
+        /* 搜索按钮 */
+        .search button { 
+            background: #00f3ff; /* 按钮背景青色 */
+            color: #0a0e17; /* 按钮上的字是深蓝色 */
+            border: none; /* 不要边框 */
+            padding: 10px 20px; /* 按钮里面内容距离边边 */
+            cursor: pointer; /* 鼠标放上去变成手 */
+            font-weight: bold; /* 字加粗 */
+        }
+        
+        /* 右上角用户操作区域（登录按钮+购物车） */
+        .user-actions { 
+            display: flex; /* 还是弹性布局 */
+            gap: 15px;  /* 里面的东西之间空15像素 */
+            align-items: center; /* 上下居中 */
+        }
+        /* 用户按钮（登录按钮） */
+        .user-btn { 
+            background: transparent;  /* 透明背景（就是没颜色） */
+            color: #00f3ff; /* 字是青色 */
+            border: 1px solid #00f3ff; /* 青色边框 */
+            padding: 8px 20px; /* 里面内容距离边边 */
+            cursor: pointer; /* 鼠标手 */
+            transition: all 0.3s;  /* 所有变化都要0.3秒慢慢变（动画效果） */
+        }
+        /* 鼠标放在用户按钮上的效果 */
+        .user-btn:hover { 
+            background: #00f3ff; /* 背景变成青色 */
+            color: #0a0e17; /* 字变成深蓝色 */
+        }
+        
+        /* 购物车图标 */
+        .cart-icon { 
+            position: relative;  /* 定位方式：相对的（为了里面的数字小圆点） */
+            cursor: pointer;  /* 鼠标手 */
+            font-size: 24px; /* 图标大小 */
+            padding: 10px; /* 图标周围的空间 */
+            background: rgba(255, 0, 128, 0.2);  /* 粉色半透明背景 */
+            border: 1px solid #ff0080; /* 粉色边框 */
+            color: #ff0080; /* 粉色图标 */
+        }
+        /* 鼠标放在购物车上的效果 */
+        .cart-icon:hover { 
+            background: rgba(255, 0, 128, 0.4);  /* 背景粉色更深一点 */
+        }
+        /* 购物车上的小圆点（显示商品数量） */
+        .cart-count { 
+            position: absolute; /* 绝对定位（可以随便放位置） */
+            top: -8px;  /* 往上挪8像素 */
+            right: -8px;  /* 往右挪8像素 */
+            background: #ff0080; /* 粉色背景 */
+            color: white; /* 白色数字 */
+            border-radius: 50%;  /* 弄成圆形 */
+            width: 20px; /* 宽20像素 */
+            height: 20px; /* 高20像素 */
+            font-size: 12px; /* 数字大小 */
+            text-align: center; /* 数字居中 */
+            line-height: 20px;  /* 行高20像素，让数字上下也居中 */
+        }
+        
+        /* 商品分类那一行（全部商品、未来科技...） */
+        .categories {
+            display: flex; /* 弹性布局 */
+            justify-content: center;  /* 里面的东西都居中 */
+            gap: 30px;  /* 每个分类之间空30像素 */
+            padding: 20px; /* 里面内容距离边边 */
+            background: rgba(10, 14, 23, 0.7);  /* 半透明背景 */
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);  /* 底下一条半透明的边 */
+        }
+        /* 每个分类（比如"全部商品"就是一个分类） */
+        .category {
+            color: #00f3ff; /* 字是青色 */
+            cursor: pointer;  /* 鼠标手 */
+            padding: 8px 15px; /* 里面内容距离边边 */
+            border: 1px solid transparent;  /* 一开始边框是透明的（看不见） */
+            transition: all 0.3s; /* 所有变化都要0.3秒慢慢变 */
+        }
+        /* 鼠标放在分类上的效果 */
+        .category:hover {
+            border: 1px solid #00f3ff;  /* 出现青色边框 */
+            box-shadow: 0 0 10px #00f3ff;  /* 加一圈青色发光 */
+        }
+        
+        /* 整个商品区域的大盒子 */
+        .container {
+            max-width: 1200px;  /* 最大宽度1200像素（太宽了就不继续宽了） */
+            margin: 30px auto;  /* 上下空30像素，左右自动（就是居中） */
+            padding: 0 20px;  /* 左右空20像素，上下不空 */
+        }
+        
+        /* 商品们排成网格的样子 */
+        .grid {
+            display: grid; /* 用网格布局（像围棋棋盘） */
+            /* 自动排成几列：每列最小250像素，最大平均分 */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;  /* 每个商品卡片之间空25像素 */
+        }
+        
+        /* 单个商品卡片 */
+        .product-card {
+            background: rgba(20, 25, 40, 0.8);  /* 半透明背景 */
+            border: 1px solid #00f3ff; /* 青色边框 */
+            border-radius: 5px; /* 四个角稍微圆一点 */
+            overflow: hidden;  /* 如果东西超出卡片了，就藏起来 */
+            transition: all 0.3s; /* 所有变化都要0.3秒慢慢变 */
+        }
+        /* 鼠标放在商品卡片上的效果 */
+        .product-card:hover {
+            transform: translateY(-5px);  /* 往上飘5像素 */
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);  /* 加一圈青色发光 */
+        }
+        
+        /* 商品卡片里的图片 */
+        .product-card img {
+            width: 100%;  /* 宽度占满整个卡片 */
+            height: 180px; /* 高度固定180像素 */
+            object-fit: cover;  /* 图片不管怎么变，都要填满这个框框 */
+            border-bottom: 1px solid #00f3ff;  /* 底下一条青色边边 */
+        }
+        
+        /* 商品卡片里图片下面的文字区域 */
+        .product-info {
+            padding: 15px; /* 里面文字距离边边15像素 */
+        }
+        
+        /* 商品名字 */
+        .product-name {
+            font-size: 16px; /* 字的大小 */
+            color: #00f3ff; /* 青色字 */
+            margin-bottom: 10px; /* 下面空10像素（和价格分开） */
+            height: 40px;  /* 固定高度40像素（所有商品名字一样高） */
+            overflow: hidden;  /* 如果字太多了，多出来的藏起来 */
+        }
+        
+        /* 商品价格 */
+        .product-price {
+            color: #ff0080;  /* 粉色价格 */
+            font-size: 20px; /* 字大一点 */
+            font-weight: bold; /* 加粗 */
+            margin-bottom: 15px; /* 下面空15像素（和按钮分开） */
+            text-shadow: 0 0 5px #ff0080;  /* 粉色发光 */
+        }
+        
+        /* 购买按钮 */
+        .buy-btn {
+            /* 背景搞成渐变：从青色慢慢变成蓝色 */
+            background: linear-gradient(45deg, #00f3ff, #0066ff);
+            color: #0a0e17; /* 字是深蓝色 */
+            border: none; /* 不要边框 */
+            padding: 10px; /* 按钮里面的字距离边边 */
+            width: 100%;  /* 宽度占满整个卡片 */
+            cursor: pointer; /* 鼠标手 */
+            font-weight: bold; /* 字加粗 */
+            transition: all 0.3s; /* 所有变化都要0.3秒慢慢变 */
+        }
+        /* 鼠标放在购买按钮上的效果 */
+        .buy-btn:hover {
+            /* 背景渐变变成：从粉色慢慢变成紫色 */
+            background: linear-gradient(45deg, #ff0080, #ff00ff);
+            color: white; /* 字变成白色 */
+        }
+        
+        /* 右边的购物车侧边栏（一开始藏起来的） */
+        .cart-sidebar {
+            position: fixed;  /* 固定定位（一直待在屏幕右边，不跟着滚动） */
+            top: 0; /* 顶部贴着屏幕顶 */
+            right: -400px;  /* 一开始在屏幕右边外面400像素（看不见） */
+            width: 400px; /* 宽度400像素 */
+            height: 100vh;  /* 高度占满整个屏幕 */
+            background: rgba(10, 14, 23, 0.95);  /* 半透明深蓝背景 */
+            border-left: 2px solid #00f3ff;  /* 左边一条青色边边 */
+            transition: right 0.3s ease;  /* 左右移动要0.3秒慢慢动 */
+            padding: 20px; /* 里面内容距离边边20像素 */
+            z-index: 1000;  /* 层级：放在最上面（盖住其他东西） */
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3); /* 加一圈发光 */
+            display: none;  /* 一开始不显示 */
+        }
+        /* 购物车打开的时候（加了这个class） */
+        .cart-sidebar.open {
+            right: 0;  /* 右边距离变成0（就滑进来了） */
+            display: block;  /* 显示出来 */
+        }
+        
+        /* 购物车顶上的头头（标题和关闭按钮） */
+        .cart-header {
+            display: flex; /* 弹性布局 */
+            justify-content: space-between; /* 里面的东西左右分开 */
+            align-items: center; /* 上下居中 */
+            margin-bottom: 20px; /* 下面空20像素 */
+            padding-bottom: 15px; /* 下面里面再空15像素 */
+            border-bottom: 1px solid #00f3ff;  /* 底下一条青色边边 */
+        }
+        
+        /* 关闭购物车的按钮（那个×） */
+        .close-cart {
+            background: none; /* 没背景 */
+            border: none; /* 没边框 */
+            color: #00f3ff; /* 青色字 */
+            font-size: 24px; /* 字大一点 */
+            cursor: pointer; /* 鼠标手 */
+        }
+        
+        /* 购物车里面放商品列表的地方 */
+        .cart-items {
+            max-height: 70vh;  /* 最大高度占屏幕的70% */
+            overflow-y: auto;  /* 如果东西太多，就出滚动条可以滚 */
+        }
+        
+        /* 购物车里的单个商品项 */
+        .cart-item {
+            display: flex; /* 弹性布局 */
+            align-items: center; /* 上下居中 */
+            padding: 15px 0; /* 上下空15像素，左右不空 */
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);  /* 底下一条半透明边边 */
+        }
+        
+        /* 购物车商品的图片 */
+        .cart-item img {
+            width: 60px; /* 宽60像素 */
+            height: 60px; /* 高60像素 */
+            object-fit: cover; /* 图片填满这个框框 */
+            margin-right: 15px; /* 右边空15像素（和文字分开） */
+            border: 1px solid #00f3ff; /* 青色边框 */
+        }
+        
+        /* 购物车商品的文字信息区域 */
+        .cart-item-info {
+            flex: 1;  /* 把剩下的空间都占了 */
+        }
+        
+        /* 购物车商品的名字 */
+        .cart-item-name {
+            color: #00f3ff; /* 青色字 */
+            margin-bottom: 5px; /* 下面空5像素 */
+        }
+        
+        /* 购物车商品的价格 */
+        .cart-item-price {
+            color: #ff0080; /* 粉色字 */
+            font-weight: bold; /* 加粗 */
+            margin-bottom: 10px; /* 下面空10像素 */
+        }
+        
+        /* 商品数量控制（+-按钮和数量显示） */
+        .item-controls {
+            display: flex; /* 弹性布局 */
+            align-items: center; /* 上下居中 */
+            gap: 10px;  /* 每个东西之间空10像素 */
+        }
+        
+        /* 数量按钮（+和-按钮） */
+        .qty-btn {
+            background: rgba(0, 243, 255, 0.2);  /* 半透明青色背景 */
+            color: #00f3ff; /* 青色字 */
+            border: 1px solid #00f3ff; /* 青色边框 */
+            width: 25px; /* 宽25像素 */
+            height: 25px; /* 高25像素 */
+            cursor: pointer; /* 鼠标手 */
+        }
+        
+        /* 移除按钮 */
+        .remove-btn {
+            background: rgba(255, 0, 128, 0.2); /* 半透明粉色背景 */
+            color: #ff0080; /* 粉色字 */
+            border: 1px solid #ff0080; /* 粉色边框 */
+            padding: 5px 10px; /* 里面内容距离边边 */
+            cursor: pointer; /* 鼠标手 */
+        }
+        
+        /* 购物车总计（最下面显示总价格的地方） */
+        .cart-total {
+            margin: 20px 0; /* 上下空20像素 */
+            text-align: right;  /* 字靠右对齐 */
+            font-size: 18px; /* 字大一点 */
+            font-weight: bold; /* 加粗 */
+            color: #00f3ff; /* 青色字 */
+        }
+        
+        /* 结算按钮（去付钱那个按钮） */
+        .checkout-btn {
+            /* 背景渐变：从粉色慢慢变成紫色 */
+            background: linear-gradient(45deg, #ff0080, #ff00ff);
+            color: white; /* 白色字 */
+            border: none; /* 不要边框 */
+            padding: 15px; /* 里面内容距离边边 */
+            width: 100%; /* 宽度占满 */
+            cursor: pointer; /* 鼠标手 */
+            font-weight: bold; /* 加粗 */
+            font-size: 16px; /* 字的大小 */
+        }
+        
+        /* 登录/注册的弹窗（遮住整个屏幕那个） */
+        .auth-modal {
+            position: fixed; /* 固定定位（盖住整个屏幕） */
+            top: 0; /* 顶部贴着屏幕顶 */
+            left: 0; /* 左边贴着屏幕左边 */
+            width: 100%; /* 宽度100%（占满屏幕宽） */
+            height: 100%; /* 高度100%（占满屏幕高） */
+            background: rgba(10, 14, 23, 0.95);  /* 半透明深蓝背景（像毛玻璃） */
+            display: none;  /* 一开始不显示 */
+            justify-content: center; /* 里面的东西水平居中 */
+            align-items: center; /* 里面的东西垂直居中 */
+            z-index: 2000;  /* 层级：比购物车还高（盖在购物车上面） */
+        }
+        
+        /* 登录/注册弹窗里面的内容盒子 */
+        .modal-content {
+            background: rgba(20, 25, 40, 0.95); /* 半透明背景 */
+            border: 2px solid #00f3ff; /* 青色边框 */
+            padding: 40px; /* 里面内容距离边边40像素 */
+            width: 350px; /* 宽度固定350像素 */
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5); /* 加一圈青色发光 */
+        }
+        
+        /* 弹窗的标题（比如"身份验证"） */
+        .modal-content h2 {
+            color: #00f3ff; /* 青色字 */
+            text-align: center; /* 字居中 */
+            margin-bottom: 30px; /* 下面空30像素 */
+            text-shadow: 0 0 10px #00f3ff; /* 字发光 */
+        }
+        
+        /* 表单的每一行（比如邮箱输入框那一行） */
+        .form-group {
+            margin-bottom: 20px; /* 下面空20像素（每行之间分开） */
+        }
+        
+        /* 输入框（邮箱、密码那些） */
+        .form-group input {
+            width: 100%; /* 宽度占满 */
+            padding: 10px; /* 里面文字距离边边 */
+            background: rgba(0, 0, 0, 0.5); /* 半透明黑背景 */
+            border: 1px solid #00f3ff; /* 青色边框 */
+            color: #00f3ff; /* 青色字 */
+            font-size: 14px; /* 字的大小 */
+        }
+        
+        /* 登录/注册按钮（弹窗里那个大按钮） */
+        .auth-btn {
+            background: linear-gradient(45deg, #00f3ff, #0066ff); /* 渐变背景 */
+            color: #0a0e17; /* 深蓝色字 */
+            border: none; /* 不要边框 */
+            padding: 12px; /* 里面内容距离边边 */
+            width: 100%; /* 宽度占满 */
+            cursor: pointer; /* 鼠标手 */
+            font-weight: bold; /* 加粗 */
+            margin-bottom: 10px; /* 下面空10像素 */
+        }
+        
+        /* 关闭弹窗的按钮 */
+        .close-modal {
+            background: rgba(255, 0, 128, 0.2); /* 半透明粉色背景 */
+            color: #ff0080; /* 粉色字 */
+            border: 1px solid #ff0080; /* 粉色边框 */
+            padding: 12px; /* 里面内容距离边边 */
+            width: 100%; /* 宽度占满 */
+            cursor: pointer; /* 鼠标手 */
+        }
+        
+        /* 切换表单的文字（"新用户注册"或"已有账号登录"） */
+        .switch-form {
+            text-align: center; /* 字居中 */
+            margin-top: 15px; /* 上面空15像素 */
+            color: #00f3ff; /* 青色字 */
+            cursor: pointer; /* 鼠标手 */
+        }
+        
+        /* ========== 一些可以到处用的特效类 ========== */
+        
+        /* 让字发光的类 */
+        .glow-text {
+            text-shadow: 0 0 10px currentColor;  /* 用当前字的颜色发光 */
+        }
+        
+        /* 让字发粉色光的类 */
+        .pink-glow {
+            text-shadow: 0 0 10px #ff0080;  /* 粉色发光 */
+        }
+        
+        /* 区域标题（比如"未来热销商品"） */
+        .section-title {
+            font-size: 24px; /* 字大一点 */
+            color: #00f3ff; /* 青色字 */
+            margin-bottom: 20px; /* 下面空20像素 */
+            padding-left: 10px; /* 左边里面空10像素 */
+            border-left: 4px solid #00f3ff;  /* 左边一条粗粗的青色边边（装饰） */
+            text-shadow: 0 0 10px #00f3ff; /* 字发光 */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ========== 身体部分：这里全是看得见的东西 ========== -->
+    
+    <!-- 最顶上那条（网站名字+搜索框+登录按钮+购物车） -->
+    <div class="header">
+        <!-- 左上角的网站名字 -->
+        <div class="logo"> HAAVK 天空属于哈夫克</div>
+        
+        <!-- 中间的搜索框区域 -->
+        <div class="search">
+            <!-- 输入框，placeholder是里面的灰色提示文字 -->
+            <input type="text" placeholder="搜索未来商品..." id="searchInput">
+            <!-- 搜索按钮，onclick是点击时做什么 -->
+            <button onclick="search()">搜索</button>
+        </div>
+        
+        <!-- 右上角的用户操作区域 -->
+        <div class="user-actions">
+            <!-- 登录按钮 -->
+            <button class="user-btn" onclick="showLogin()">登录</button>
+            
+            <!-- 购物车图标 -->
+            <div class="cart-icon" onclick="showCart()">
+                🛸 <!-- 这是一个表情符号，显示飞碟图标 -->
+                <!-- 购物车上的小圆点，显示商品数量，一开始是0 -->
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 商品分类那一行 -->
+    <div class="categories">
+        <!-- 每个分类，点击时调用filterProducts函数，传进去不同的参数 -->
+        <div class="category" onclick="filterProducts('all')">全部商品</div>
+        <div class="category" onclick="filterProducts('tech')">未来科技</div>
+        <div class="category" onclick="filterProducts('gadgets')">智能设备</div>
+        <div class="category" onclick="filterProducts('wearable')">可穿戴</div>
+        <div class="category" onclick="filterProducts('cyber')">赛博装备</div>
+    </div>
+    
+    <!-- 主要的内容区域（显示商品的地方） -->
+    <div class="container">
+        <!-- 区域标题 -->
+        <div class="section-title">🚀 未来热销商品</div>
+        
+        <!-- 商品网格，id用来在JavaScript里找到这个元素 -->
+        <div class="grid" id="productsGrid">
+            <!-- 商品卡片会通过JavaScript动态生成在这里 -->
+        </div>
+    </div>
+    
+    <!-- 右边的购物车侧边栏（一开始看不见） -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <!-- 购物车头部 -->
+        <div class="cart-header">
+            <h2 class="glow-text">🛸 购物车</h2>
+            <!-- 关闭按钮，点击时调用hideCart函数 -->
+            <button class="close-cart" onclick="hideCart()">×</button>
+        </div>
+        
+        <!-- 购物车商品列表 -->
+        <div class="cart-items" id="cartItems">
+            <!-- 一开始购物车是空的，显示这句话 -->
+            <p style="text-align:center;color:#00f3ff;padding:40px 0;">购物车空空如也</p>
+        </div>
+        
+        <!-- 购物车总计金额 -->
+        <div class="cart-total">
+            总计: <span class="pink-glow">¥<span id="totalPrice">0</span></span>
+        </div>
+        
+        <!-- 结算按钮，点击时调用checkout函数 -->
+        <button class="checkout-btn" onclick="checkout()">💳 确认支付</button>
+    </div>
+    
+    <!-- 登录/注册的弹窗（一开始看不见） -->
+    <div class="auth-modal" id="authModal">
+        <div class="modal-content">
+            <!-- 弹窗标题，id用来在JavaScript里改文字 -->
+            <h2 id="modalTitle">🔐 身份验证</h2>
+            
+            <!-- 表单 -->
+            <div class="form-group">
+                <!-- 邮箱输入框 -->
+                <input type="email" id="email" placeholder="电子邮箱">
+            </div>
+            <div class="form-group">
+                <!-- 密码输入框 -->
+                <input type="password" id="password" placeholder="安全密码">
+            </div>
+            <!-- 确认密码框，注册时才显示，一开始藏起来 -->
+            <div class="form-group" id="confirmPasswordGroup" style="display:none;">
+                <input type="password" id="confirmPassword" placeholder="确认密码">
+            </div>
+            
+            <!-- 登录/注册按钮 -->
+            <button class="auth-btn" id="authBtn" onclick="handleAuth()">登录</button>
+            
+            <!-- 关闭弹窗按钮 -->
+            <button class="close-modal" onclick="hideModal()">关闭</button>
+            
+            <!-- 切换登录/注册的链接 -->
+            <div class="switch-form" id="switchText" onclick="switchForm()">新用户注册</div>
+        </div>
+    </div>
+
+<script>
+// ========== 这里是JavaScript，让网页动起来 ==========
+
+// 📦 所有商品的数据库（数组，像一个大柜子，里面放了很多商品）
+const products = [
+    {id:1, name:"量子耳机", price:2999, img:"1.jpg", cat:"tech"},
+    {id:2, name:"神经接口", price:4599, img:"2.jpg", cat:"tech"},
+    {id:3, name:"全息手表", price:8999, img:"3.jpg", cat:"gadgets"},
+    {id:4, name:"光速键盘", price:1999, img:"4.jpg", cat:"gadgets"},
+    {id:5, name:"纳米服装", price:2999, img:"5.jpg", cat:"wearable"},
+    {id:6, name:"增强现实眼镜", price:12999, img:"6.jpg", cat:"wearable"},
+    {id:7, name:"能量盾", price:8999, img:"7.jpg", cat:"cyber"},
+    {id:8, name:"机械臂", price:15999, img:"8.jpg", cat:"cyber"},
+    {id:9, name:"反重力靴", price:22999, img:"9.jpg", cat:"tech"},
+    {id:10, name:"脑机接口", price:32999, img:"10.jpg", cat:"tech"},
+    {id:11, name:"隐身斗篷", price:45999, img:"11.jpg", cat:"cyber"},
+    {id:12, name:"激光武器", price:59999, img:"12.jpg", cat:"cyber"}
+];
+
+// 📊 全局变量（整个程序都能用的变量）
+let cart = [];  // 🛒 购物车数组，开始是空的
+let user = null;  // 👤 当前登录的用户，null表示没人登录
+let currentFilter = 'all';  // 🔍 当前选中的商品分类，默认是"全部"
+let isLoginForm = true;  // 🔄 当前是登录表单还是注册表单，true表示登录
+
+// 🚀 页面加载完成后做的事情
+window.onload = function() {
+    showProducts(products);  // 📦 一开始就显示所有商品
+};
+
+// 📦 显示商品的函数（把商品数组显示到页面上）
+function showProducts(items) {
+    // 找到页面上放商品的格子（那个div）
+    const container = document.getElementById('productsGrid');
+    
+    // 🎴 用魔法把商品数组变成HTML代码
+    // map：把数组里的每个商品变成一段HTML代码
+    // join：把所有的HTML代码片段拼成一个长字符串
+    container.innerHTML = items.map(p => `
+        <div class="product-card">
+            <img src="${p.img}" alt="${p.name}">
+            <div class="product-info">
+                <div class="product-name">${p.name}</div>
+                <div class="product-price">¥${p.price}</div>
+                <!-- 🛍️ 购买按钮，点击时调用addToCart函数，传进去商品的id -->
+                <button class="buy-btn" onclick="addToCart(${p.id})">🚀 立即购买</button>
+            </div>
+        </div>
+    `).join('');  // 🔗 拼起来
+}
+
+// 🔍 筛选商品的函数（比如只显示"未来科技"类）
+function filterProducts(cat) {
+    currentFilter = cat;  // 📌 记住现在选的是哪个分类
+    
+    // 开始筛选
+    const filtered = cat === 'all' 
+        ? products  // 🔍 如果是"全部"，就把所有商品拿出来
+        : products.filter(p => p.cat === cat);  // 🎯 否则只拿分类匹配的商品
+        
+    showProducts(filtered);  // 📦 显示筛选后的商品
+}
+
+// 🔎 搜索商品的函数
+function search() {
+    // 🔤 拿到搜索框里输入的文字，变成小写（这样搜的时候不分大小写）
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    
+    // 🔍 在商品里找名字包含搜索词的商品
+    // includes：检查商品名字里有没有搜索词
+    const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+    
+    showProducts(filtered);  // 📦 显示搜到的商品
+}
+
+// ========== 🛒 购物车功能 ==========
+
+// 🛍️ 添加商品到购物车
+function addToCart(id) {
+    // 🔍 先在所有商品里找到点击的那个商品
+    // find：在一堆商品里找到id匹配的那个
+    const product = products.find(p => p.id === id);
+    
+    // 🔍 看看购物车里是不是已经有这个商品了
+    const item = cart.find(i => i.id === id);
+    
+    if (item) {
+        item.quantity++;  // 📈 如果已经有了，数量就+1
+    } else {
+        // 📝 如果是新商品，就加到购物车
+        // {...product}：复制商品的所有信息
+        // quantity: 1：加上数量属性，一开始是1
+        cart.push({...product, quantity: 1});
+    }
+    
+    updateCart();  // 🔄 更新购物车的显示
+    alert(`🚀 ${product.name} 已加入购物车`);  // 💬 弹个提示告诉用户
+}
+
+// 🔄 更新购物车的显示（刷新购物车的样子）
+function updateCart() {
+    // 📊 计算购物车里一共有多少件商品（所有商品数量加起来）
+    // reduce：把数组里的东西加起来
+    // sum：累加的结果，item：当前商品
+    // 0：从0开始加
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // 📌 更新购物车图标上的小圆点数字
+    document.getElementById('cartCount').textContent = totalItems;
+    
+    // 📦 更新购物车里面的商品列表
+    const container = document.getElementById('cartItems');
+    
+    if (cart.length === 0) {
+        // 🛒 如果购物车空了，显示"空空如也"
+        container.innerHTML = '<p style="text-align:center;color:#00f3ff;padding:40px 0;">购物车空空如也</p>';
+    } else {
+        // 📋 如果购物车有东西，就显示所有商品
+        container.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <img src="${item.img}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">¥${item.price}</div>
+                    <div class="item-controls">
+                        <!-- ➖ 减少数量按钮，点击时数量-1 -->
+                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                        <!-- 显示当前数量 -->
+                        <span style="color:#00f3ff">${item.quantity}</span>
+                        <!-- ➕ 增加数量按钮，点击时数量+1 -->
+                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                        <!-- 🗑️ 移除按钮，点击时把这个商品从购物车删掉 -->
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">移除</button>
+                    </div>
+                </div>
+            </div>
+        `).join(''); // 把所有的HTML片段拼起来
+    }
+    
+    // 💰 计算总价格：每个商品的价格×数量，然后全部加起来
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // 更新页面上显示的总价格
+    document.getElementById('totalPrice').textContent = total;
+}
+
+// 📈 修改商品数量（加一个或减一个）
+function changeQty(id, delta) {
+    // 🔍 找到购物车里这个商品
+    const item = cart.find(i => i.id === id);
+    
+    if (item) {
+        item.quantity += delta;  // ➕➖ 加上delta（delta是1就是加，是-1就是减）
+        
+        // 🗑️ 如果数量减到0或以下了，就把这个商品从购物车删掉
+        if (item.quantity <= 0) {
+            // filter：过滤数组，只留下id不是这个的商品（就是删掉这个）
+            cart = cart.filter(i => i.id !== id);
+        }
+        
+        updateCart();  // 🔄 更新购物车显示
+    }
+}
+
+// 🗑️ 从购物车移除商品（不管数量多少，直接删掉）
+function removeFromCart(id) {
+    // 🚫 过滤掉id是这个的商品（就是删掉它）
+    cart = cart.filter(item => item.id !== id);
+    updateCart();  // 🔄 更新购物车显示
+}
+
+// ========== 🛸 购物车显示/隐藏 ==========
+
+// 📤 显示购物车（点购物车图标时调用）
+function showCart() {
+    // 🎯 给购物车侧边栏加上"open"这个class，它就滑出来了
+    // classList.add：给元素加一个CSS类
+    document.getElementById('cartSidebar').classList.add('open');
+}
+
+// 📥 隐藏购物车（点×按钮时调用）
+function hideCart() {
+    // ❌ 把"open"这个class去掉，购物车就滑走了
+    // classList.remove：从元素去掉一个CSS类
+    document.getElementById('cartSidebar').classList.remove('open');
+}
+
+// ========== 🔐 登录注册功能 ==========
+
+// 👤 显示登录框（点登录按钮时调用）
+function showLogin() {
+    isLoginForm = true;  // 📝 设置成登录模式
+    updateAuthForm();  // 🔄 更新表单显示（变成登录的样子）
+    // 📦 把登录弹窗显示出来
+    // style.display = 'flex'：让元素显示出来，并用flex方式布局
+    document.getElementById('authModal').style.display = 'flex';
+}
+
+// ❌ 隐藏弹窗（点关闭按钮时调用）
+function hideModal() {
+    // 🚫 把弹窗藏起来
+    document.getElementById('authModal').style.display = 'none';
+}
+
+// 🔄 更新登录注册表单的显示（切换登录/注册样子）
+function updateAuthForm() {
+    if (isLoginForm) {
+        // 🔐 如果是登录模式
+        document.getElementById('modalTitle').textContent = '🔐 身份验证'; // 标题
+        document.getElementById('authBtn').textContent = '登录'; // 按钮文字
+        // 🚫 确认密码框藏起来（登录不需要确认密码）
+        document.getElementById('confirmPasswordGroup').style.display = 'none';
+        document.getElementById('switchText').textContent = '新用户注册'; // 切换链接文字
+    } else {
+        // 🚀 如果是注册模式
+        document.getElementById('modalTitle').textContent = '🚀 新用户注册'; // 标题
+        document.getElementById('authBtn').textContent = '注册'; // 按钮文字
+        // ✅ 确认密码框显示出来（注册需要确认密码）
+        document.getElementById('confirmPasswordGroup').style.display = 'block';
+        document.getElementById('switchText').textContent = '已有账号登录'; // 切换链接文字
+    }
+}
+
+// 🔀 切换登录/注册表单（点"新用户注册"或"已有账号登录"时调用）
+function switchForm() {
+    isLoginForm = !isLoginForm;  // 🔄 把true变成false，false变成true
+    updateAuthForm();  // 🔄 更新表单显示
+}
+
+// 🔑 处理登录或注册（点登录/注册按钮时调用）
+function handleAuth() {
+    // 📧 拿到邮箱输入框里的值
+    const email = document.getElementById('email').value;
+    // 🔑 拿到密码输入框里的值
+    const password = document.getElementById('password').value;
+    
+    if (isLoginForm) {
+        // 🔐 如果是登录
+        if (email && password) { // 检查邮箱和密码是不是都不空
+            user = email;  // 👤 记住登录的用户（简单模拟，实际要查数据库）
+            alert('🔓 登录成功！'); // 弹个成功提示
+            hideModal();  // ❌ 把弹窗关掉
+        }
+    } else {
+        // 🚀 如果是注册
+        // 🔑 拿到确认密码框里的值
+        const confirm = document.getElementById('confirmPassword').value;
+        
+        // 检查两次输入的密码是不是一样
+        if (password !== confirm) {
+            alert('⚠️ 密码不一致');  // ⚠️ 不一样就提示
+            return; // 停在这里，不往下执行了
+        }
+        
+        user = email;  // 👤 记住注册的用户
+        alert('🚀 注册成功！'); // 弹个成功提示
+        hideModal();  // ❌ 把弹窗关掉
+    }
+}
+
+// ========== 💳 结算功能 ==========
+function checkout() {
+    // 🛒 先检查购物车是不是空的
+    if (cart.length === 0) {
+        alert('⚠️ 购物车为空'); // 空的就提示
+        return; // 停在这里
+    }
+    
+    // 👤 检查用户是不是登录了
+    if (!user) {
+        alert('⚠️ 请先登录'); // 没登录就提示
+        showLogin();  // 🔐 弹出登录框
+        return; // 停在这里
+    }
+    
+    // 💰 拿到总价格
+    const total = document.getElementById('totalPrice').textContent;
+    
+    // 💬 弹个确认框，问用户是不是真的要付这么多钱
+    // confirm：弹一个"确定/取消"的对话框，确定返回true，取消返回false
+    if (confirm(`💳 确认支付 ¥${total}？`)) {
+        alert('✅ 支付成功！'); // 用户点了确定，就提示支付成功
+        cart = [];  // 🗑️ 清空购物车（因为东西买走了）
+        updateCart();  // 🔄 更新购物车显示（变成空的）
+        hideCart();  // 📥 把购物车关掉
+    }
+    // 如果用户点了取消，就什么都不做
+}
+</script>
+</body>
+</html>
